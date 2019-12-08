@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import get from 'lodash/get'
 import { useFirebase } from 'react-redux-firebase'
 import { isLoaded, isEmpty } from 'react-redux-firebase'
@@ -14,6 +13,7 @@ import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../store'
 import { setTitle } from '../store/layout/actions'
+import { CircularProgress } from '@material-ui/core'
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -21,10 +21,6 @@ const validationSchema = yup.object().shape({
     .email()
     .required(),
   password: yup.string().required(),
-  passwordConfirmation: yup
-    .string()
-    .oneOf([yup.ref('password'), null])
-    .required(),
 })
 
 const createStyles = makeStyles((theme: Theme) => ({
@@ -39,7 +35,7 @@ interface RegisterUser {
   password: string
 }
 
-export default function Register() {
+export default function Login() {
   const styles = createStyles()
   const firebase = useFirebase()
   const auth = useSelector(function({ firebase }: RootState) {
@@ -57,7 +53,7 @@ export default function Register() {
   )
   async function registerUser({ email, password }: RegisterUser) {
     try {
-      await firebase.createUser({ email, password })
+      await firebase.login({ email, password })
     } catch (e) {
       console.error(e)
     }
@@ -65,7 +61,7 @@ export default function Register() {
   if (isLoaded(auth) && isEmpty(auth)) {
     return (
       <Formik
-        initialValues={{ password: '', email: '', passwordConfirmation: '' }}
+        initialValues={{ password: '', email: '' }}
         onSubmit={registerUser}
         validationSchema={validationSchema}
       >
@@ -93,18 +89,13 @@ export default function Register() {
                       fullWidth
                       variant="outlined"
                     />
-                    <Field
-                      name="passwordConfirmation"
-                      label="Repetir contraseña"
-                      type="password"
-                      component={TextField}
-                      margin="normal"
-                      fullWidth
-                      variant="outlined"
-                    />
                   </Grid>
                   <Grid item xs={12}>
-                    <Button type="submit" disabled={!isValid && isSubmitting}>
+                    <Button
+                      type="submit"
+                      disabled={!isValid && isSubmitting}
+                      variant="contained"
+                    >
                       Enviar
                     </Button>
                   </Grid>

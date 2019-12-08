@@ -6,6 +6,7 @@ import { firestoreReducer } from 'redux-firestore'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/analytics'
 
 import { layoutReducer } from './layout/reducer'
 
