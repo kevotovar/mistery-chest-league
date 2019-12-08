@@ -1,17 +1,38 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import { createFirestoreInstance } from 'redux-firestore'
+import { ReactReduxFirebaseProvider } from 'react-redux-firebase'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider } from '@material-ui/core/styles'
+
+import { store, firebase } from './store'
 import App from './App'
 import theme from './theme'
 
 import * as serviceWorker from './serviceWorker'
 
+const rrfConfig = {
+  userProfile: 'users',
+  presence: 'presence',
+  sessions: 'sessions',
+  useFirestoreForProfile: true,
+}
+
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <App />
-  </ThemeProvider>,
+  <Provider store={store}>
+    <ReactReduxFirebaseProvider
+      firebase={firebase}
+      config={rrfConfig}
+      createFirestoreInstance={createFirestoreInstance}
+      dispatch={store.dispatch}
+    >
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </ReactReduxFirebaseProvider>
+  </Provider>,
   document.getElementById('root')
 )
 

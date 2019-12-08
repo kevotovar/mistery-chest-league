@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import Home from 'screens/Home'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import NavBar from 'components/NavBar'
 import Drawer from 'components/Drawer'
+
+const Home = React.lazy(() => import('screens/Home'))
+const Register = React.lazy(() => import('screens/Register'))
+const Logout = React.lazy(() => import('screens/Logout'))
 
 function App() {
   const [drawerOpen, setDrawerOpen] = React.useState(false)
@@ -11,15 +15,23 @@ function App() {
   }
   return (
     <BrowserRouter>
-      <div className="App">
-        <NavBar toggleOpenDrawer={toggleOpenDrawer} />
-        <Drawer open={drawerOpen} toggleOpenDrawer={toggleOpenDrawer} />
-        <Switch>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </div>
+      <Suspense fallback={<CircularProgress />}>
+        <div className="App">
+          <NavBar toggleOpenDrawer={toggleOpenDrawer} />
+          <Drawer open={drawerOpen} toggleOpenDrawer={toggleOpenDrawer} />
+          <Switch>
+            <Route path="/register">
+              <Register />
+            </Route>
+            <Route path="/logout">
+              <Logout />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </div>
+      </Suspense>
     </BrowserRouter>
   )
 }
