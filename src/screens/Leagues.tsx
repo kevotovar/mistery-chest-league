@@ -6,9 +6,10 @@ import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { RootState } from 'store'
-import { CircularProgress } from '@material-ui/core'
+import LeagueListCard from 'components/leagues/LeagueListCard'
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: { margin: theme.spacing(2, 0, 1) },
@@ -29,9 +30,20 @@ export default function Leagues() {
               Ligas
             </Typography>
           </Grid>
+          {leagues.map((league: any) => (
+            <LeagueListCard
+              key={league.id}
+              title={league.name}
+              image="https://anmosugoi.com/wp-content/uploads/2019/10/fate-hf-3-key-2.jpg"
+              leagueId={league.id}
+            />
+          ))}
         </Grid>
       </Container>
     )
+  }
+  if (!isLoaded(leagues)) {
+    return <CircularProgress />
   }
   if (isEmpty(leagues)) {
     return (
