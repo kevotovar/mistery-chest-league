@@ -11,6 +11,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Home from '@material-ui/icons/Home'
+import Dashboard from '@material-ui/icons/Dashboard'
 
 import Anonymous from './Anonymous'
 import Logged from './Logged'
@@ -50,6 +51,12 @@ export default function TemporaryDrawer({
             <Home />
           </ListItemIcon>
           <ListItemText primary="Inicio" />
+        </ListItem>
+        <ListItem button component={Link} to="/leagues">
+          <ListItemIcon>
+            <Dashboard />
+          </ListItemIcon>
+          <ListItemText primary="Ligas" />
         </ListItem>
       </List>
       <Divider />

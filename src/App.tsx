@@ -6,6 +6,7 @@ import Drawer from 'components/Drawer'
 
 const Home = React.lazy(() => import('screens/Home'))
 const Register = React.lazy(() => import('screens/Register'))
+const Leagues = React.lazy(() => import('screens/Leagues'))
 const Login = React.lazy(() => import('screens/Login'))
 const Logout = React.lazy(() => import('screens/Logout'))
 
@@ -30,7 +31,10 @@ function App() {
             <Route path="/logout">
               <Logout />
             </Route>
-            <Route path="/">
+            <Route exact path="/leagues">
+              <Leagues />
+            </Route>
+            <Route exact path="/">
               <Home />
             </Route>
           </Switch>
