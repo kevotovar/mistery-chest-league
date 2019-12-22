@@ -9,6 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import get from 'lodash/get'
 
 import { RootState } from 'store'
+import LeagueRegistredUsers from 'components/leagues/LeagueRegistredUsers'
 
 export default function League() {
   const { leagueId } = useParams()
@@ -23,6 +24,12 @@ export default function League() {
       doc: participant,
     }))
   )
+  const storeParticipants = useSelector(({ firestore }: RootState) => {
+    const users = get(firestore, 'data.users', {})
+    return participants
+      .map((participantId: string) => users[participantId])
+      .filter(Boolean)
+  })
   if (!isLoaded(league)) {
     return <CircularProgress />
   }
@@ -44,6 +51,9 @@ export default function League() {
           <Typography variant="h4" component="h1">
             {league.name}
           </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <LeagueRegistredUsers data={storeParticipants} />
         </Grid>
       </Grid>
     </Container>
