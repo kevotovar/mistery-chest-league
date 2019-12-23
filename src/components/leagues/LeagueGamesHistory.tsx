@@ -9,7 +9,7 @@ import TableBody from '@material-ui/core/TableBody'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { useTable } from 'react-table'
-import get from 'lodash/get'
+import moment from 'moment'
 
 interface LeagueGamesHistoryProps {
   data: any
@@ -39,6 +39,11 @@ export default function LeagueGamesHistory({
       {
         Header: 'Perdedor',
         accessor: (item: any) => users[item.loser]?.email,
+      },
+      {
+        Header: 'Fecha',
+        accessor: (item: any) => item.timestamp.seconds,
+        Cell: (props: any) => moment(props.value).format('LLL'),
       },
     ],
     [users]

@@ -5,12 +5,16 @@ import { createFirestoreInstance } from 'redux-firestore'
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider } from '@material-ui/core/styles'
+import moment from 'moment'
 
 import { store, firebase } from './store'
 import App from './App'
 import theme from './theme'
 
 import * as serviceWorker from './serviceWorker'
+import 'moment/locale/es'
+
+moment.locale('es')
 
 const rrfConfig = {
   userProfile: 'users',
