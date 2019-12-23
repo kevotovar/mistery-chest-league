@@ -8,13 +8,12 @@ import TableCell from '@material-ui/core/TableCell'
 import TableBody from '@material-ui/core/TableBody'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import ArrowDropDown from '@material-ui/icons/ArrowDropDown'
-import ArrowDropUp from '@material-ui/icons/ArrowDropUp'
+import { useTable } from 'react-table'
 import get from 'lodash/get'
-import { useTable, useSortBy } from 'react-table'
 
-interface LeagueRegistredUsersProps {
+interface LeagueGamesHistoryProps {
   data: any
+  users: any
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,51 +25,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-interface ShowArrowColumn {
-  isSorted: boolean
-  isSortedDesc: boolean
-}
-
-function showArrow(column: ShowArrowColumn) {
-  if (column.isSorted) {
-    if (column.isSortedDesc) {
-      return <ArrowDropDown />
-    } else {
-      return <ArrowDropUp />
-    }
-  }
-  return null
-}
-
-const columns = [
-  {
-    Header: 'ID',
-    disableSortBy: true,
-    accessor: (item = {}) => get(item, 'id'),
-    sortable: false,
-  },
-  {
-    Header: 'Email',
-    disableSortBy: true,
-    accessor: (item = {}) => get(item, 'email'),
-  },
-  {
-    Header: 'Juegos ganados',
-    accessor: (item = {}) => get(item, 'wins'),
-    id: 'wins',
-  },
-  { Header: 'Juegos jugados', accessor: (item = {}) => get(item, 'played') },
-]
-
-export default function LeagueRegistredUsers({
+export default function LeagueGamesHistory({
   data,
-}: LeagueRegistredUsersProps) {
+  users,
+}: LeagueGamesHistoryProps) {
   const classes = useStyles()
-  const initialState = React.useMemo(
-    () => ({
-      sortBy: [{ id: 'wins', desc: true }],
-    }),
-    []
+  const columns: any = React.useMemo(
+    () => [
+      {
+        Header: 'Ganador',
+        accessor: (item: any) => users[item.winner]?.email,
+      },
+      {
+        Header: 'Perdedor',
+        accessor: (item: any) => users[item.loser]?.email,
+      },
+    ],
+    [users]
   )
   const {
     getTableProps,
@@ -78,23 +49,11 @@ export default function LeagueRegistredUsers({
     rows,
     prepareRow,
     headerGroups,
-  } = useTable(
-    { data, columns, disableMultiSort: true, initialState } as any,
-    useSortBy
-  )
-  if (data.length === 0) {
-    return (
-      <div className={classes.container}>
-        <Typography variant="h5" gutterBottom>
-          No existen usuarios registrados
-        </Typography>
-      </div>
-    )
-  }
+  } = useTable({ columns, data })
   return (
     <div className={classes.container}>
       <Typography variant="h5" gutterBottom>
-        Registrados
+        Juegos de liga
       </Typography>
       <TableContainer component={Paper}>
         <Table {...getTableProps()}>
@@ -104,11 +63,10 @@ export default function LeagueRegistredUsers({
                 {headerGroup.headers.map(column => {
                   return (
                     <TableCell
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                      {...column.getHeaderProps()}
                       className={classes.headerTableCell}
                     >
                       {column.render('Header')}
-                      {showArrow(column as any)}
                     </TableCell>
                   )
                 })}

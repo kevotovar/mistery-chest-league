@@ -18,6 +18,7 @@ import get from 'lodash/get'
 
 import { RootState } from 'store'
 import LeagueRegistredUsers from 'components/leagues/LeagueRegistredUsers'
+import LeagueGamesHistory from 'components/leagues/LeagueGamesHistory'
 import AddGame from 'components/leagues/AddGame'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,18 +36,80 @@ export default function League() {
     get(firestore, `data.leagues.${leagueId}`)
   )
   const participants = get(league, 'participants', [])
+  const users = useSelector(({ firestore }: RootState) =>
+    get(firestore, 'data.users', {})
+  )
+  const userUid = useSelector(({ firebase }: RootState) =>
+    get(firebase, 'auth.uid')
+  )
   useFirestoreConnect(
     participants.map((participant: string) => ({
       collection: 'users',
       doc: participant,
+      type: 'once',
     }))
+  )
+  useFirestoreConnect({
+    collection: 'games',
+    where: ['leagueId', '==', leagueId],
+  })
+  useFirestoreConnect({
+    collection: 'roles',
+    doc: userUid,
+  })
+  const userRole = useSelector(({ firestore }: RootState) =>
+    get(firestore, `data.roles.${userUid}`, {})
+  )
+  const leagueGames: any[] = useSelector(({ firestore }: RootState) =>
+    get(firestore, 'ordered.games', [])
+  )
+  const leagueGamesWins = React.useMemo(
+    () =>
+      leagueGames.reduce(function(acc, leagueGame) {
+        const winner = leagueGame.winner
+        const leagueGameWinsCount = acc[winner]
+        if (leagueGameWinsCount) {
+          acc[winner] += 1
+          return acc
+        } else {
+          acc[winner] = 1
+          return acc
+        }
+      }, {}),
+    [leagueGames]
+  )
+  const leagueGamesPlayed = React.useMemo(
+    () =>
+      leagueGames.reduce(function(acc, leagueGame) {
+        const winner = leagueGame.winner
+        const loser = leagueGame.loser
+        const accLoserUser = acc[loser]
+        const accWinnerUser = acc[winner]
+        if (accLoserUser) {
+          acc[loser] += 1
+        } else {
+          acc[loser] = 1
+        }
+        if (accWinnerUser) {
+          acc[winner] += 1
+        } else {
+          acc[winner] = 1
+        }
+        return acc
+      }, {}),
+    [leagueGames]
   )
   const storeParticipants = useSelector(({ firestore }: RootState) => {
     const users = get(firestore, 'data.users', {})
     return participants
       .map((participantId: string) =>
         users[participantId]
-          ? { id: participantId, ...users[participantId] }
+          ? {
+              id: participantId,
+              wins: leagueGamesWins[participantId] || 0,
+              played: leagueGamesPlayed[participantId] || 0,
+              ...users[participantId],
+            }
           : {}
       )
       .filter((participant: any) => participant.email)
@@ -84,19 +147,26 @@ export default function League() {
         <Grid item xs={12}>
           <LeagueRegistredUsers data={storeParticipants} />
         </Grid>
+        <Grid item xs={12}>
+          <LeagueGamesHistory data={leagueGames} users={users} />
+        </Grid>
       </Grid>
-      <Fab
-        color="primary"
-        onClick={() => setDialog(true)}
-        className={classes.fab}
-      >
-        <AddIcon />
-      </Fab>
-      <AddGame
-        open={dialog}
-        onClose={() => setDialog(false)}
-        onSubmit={submit}
-      />
+      {userRole.admin && (
+        <>
+          <Fab
+            color="primary"
+            onClick={() => setDialog(true)}
+            className={classes.fab}
+          >
+            <AddIcon />
+          </Fab>
+          <AddGame
+            open={dialog}
+            onClose={() => setDialog(false)}
+            onSubmit={submit}
+          />
+        </>
+      )}
     </Container>
   )
 }

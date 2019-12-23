@@ -30,8 +30,12 @@ export default function AddGame({ open, onSubmit, onClose }: AddGameProps) {
       onSubmit={async (values, actions) => {
         try {
           await onSubmit(values)
+          onClose()
           actions.setSubmitting(false)
-        } catch (e) {}
+          actions.resetForm()
+        } catch (e) {
+          console.error(e)
+        }
       }}
     >
       {({ resetForm, isValid, isSubmitting, submitForm }) => (
