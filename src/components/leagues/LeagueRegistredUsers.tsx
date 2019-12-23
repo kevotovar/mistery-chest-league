@@ -25,6 +25,7 @@ export default function LeagueRegistredUsers({
   data,
 }: LeagueRegistredUsersProps) {
   const columns = [
+    { Header: 'ID', accessor: (item = {}) => get(item, 'id') },
     { Header: 'Email', accessor: (item = {}) => get(item, 'email') },
   ]
   const classes = useStyles()
@@ -35,6 +36,15 @@ export default function LeagueRegistredUsers({
     prepareRow,
     headerGroups,
   } = useTable({ data, columns })
+  if (data.length === 0) {
+    return (
+      <div className={classes.container}>
+        <Typography variant="h5" gutterBottom>
+          No existen usuarios registrados
+        </Typography>
+      </div>
+    )
+  }
   return (
     <div className={classes.container}>
       <Typography variant="h5" gutterBottom>

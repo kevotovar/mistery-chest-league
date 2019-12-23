@@ -7,6 +7,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/analytics'
+import 'firebase/functions'
 
 import { layoutReducer } from './layout/reducer'
 
@@ -23,6 +24,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig)
 firebase.firestore()
+export const functions = firebase.functions()
 
 const reducers = combineReducers({
   layoutState: layoutReducer,
