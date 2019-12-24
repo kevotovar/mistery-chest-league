@@ -11,7 +11,7 @@ import get from 'lodash/get'
 import { setTitle } from 'store/layout/actions'
 import { RootState } from 'store'
 
-import heroImage from 'images/hero.png'
+import heroImage from 'images/hero.jpg'
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
