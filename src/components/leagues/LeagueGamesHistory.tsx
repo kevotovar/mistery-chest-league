@@ -55,6 +55,15 @@ export default function LeagueGamesHistory({
     prepareRow,
     headerGroups,
   } = useTable({ columns, data })
+  if (!data.length) {
+    return (
+      <div className={classes.container}>
+        <Typography variant="h5" gutterBottom>
+          Todavía no hay juego registrados
+        </Typography>
+      </div>
+    )
+  }
   return (
     <div className={classes.container}>
       <Typography variant="h5" gutterBottom>

@@ -17,26 +17,31 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function Leagues() {
   const classes = useStyles()
-  useFirestoreConnect('leagues')
+  useFirestoreConnect({
+    collection: 'leagues',
+    where: ['active', '==', true],
+  })
   const leagues = useSelector(({ firestore }: RootState) =>
     get(firestore, 'ordered.leagues')
   )
   if (isLoaded(leagues)) {
     return (
       <Container>
-        <Grid container>
+        <Grid container justify="space-between">
           <Grid item xs={12}>
             <Typography variant="h4" component="h1" className={classes.header}>
               Ligas
             </Typography>
           </Grid>
           {leagues.map((league: any) => (
-            <LeagueListCard
-              key={league.id}
-              title={league.name}
-              image="https://anmosugoi.com/wp-content/uploads/2019/10/fate-hf-3-key-2.jpg"
-              leagueId={league.id}
-            />
+            <Grid item xs={12} md={5}>
+              <LeagueListCard
+                key={league.id}
+                title={league.name}
+                image={league.image}
+                leagueId={league.id}
+              />
+            </Grid>
           ))}
         </Grid>
       </Container>

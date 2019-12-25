@@ -13,6 +13,7 @@ import theme from './theme'
 
 import * as serviceWorker from './serviceWorker'
 import 'moment/locale/es'
+import './styles.css'
 
 moment.locale('es')
 

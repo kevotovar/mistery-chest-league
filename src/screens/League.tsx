@@ -164,6 +164,7 @@ export default function League() {
             open={dialog}
             onClose={() => setDialog(false)}
             onSubmit={submit}
+            users={users}
           />
         </>
       )}
