@@ -13,6 +13,7 @@ import LeagueListCard from 'components/leagues/LeagueListCard'
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: { margin: theme.spacing(2, 0, 1) },
+  gridCard: { margin: theme.spacing(2, 0) },
 }))
 
 export default function Leagues() {
@@ -34,9 +35,14 @@ export default function Leagues() {
             </Typography>
           </Grid>
           {leagues.map((league: any) => (
-            <Grid item xs={12} md={5}>
+            <Grid
+              item
+              xs={12}
+              md={5}
+              key={league.id}
+              className={classes.gridCard}
+            >
               <LeagueListCard
-                key={league.id}
                 title={league.name}
                 image={league.image}
                 leagueId={league.id}
