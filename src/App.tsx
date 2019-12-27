@@ -40,7 +40,7 @@ function App() {
             <Route exact path="/leagues/:leagueId">
               <League />
             </Route>
-            <Route exact path="'/privacy-policy">
+            <Route exact path="/privacy-policy">
               <PrivacyPolicy />
             </Route>
             <Route exact path="/">
