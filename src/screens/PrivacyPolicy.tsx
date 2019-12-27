@@ -69,15 +69,12 @@ export default function PrivacityPolicy() {
         momento desde su ordenador. Sin embargo las cookies ayudan a
         proporcionar un mejor servicio de los sitios web, estás no dan acceso a
         información de su ordenador ni de usted, a menos de que usted así lo
-        quiera y la proporcione directamente,{' '}
-        <a href="https://www.buscarpareja.es" target="_blank">
-          visitas a una web{' '}
-        </a>
-        . Usted puede aceptar o negar el uso de cookies, sin embargo la mayoría
-        de navegadores aceptan cookies automáticamente pues sirve para tener un
-        mejor servicio web. También usted puede cambiar la configuración de su
-        ordenador para declinar las cookies. Si se declinan es posible que no
-        pueda utilizar algunos de nuestros servicios.
+        quiera y la proporcione directamente, visitas a una web . Usted puede
+        aceptar o negar el uso de cookies, sin embargo la mayoría de navegadores
+        aceptan cookies automáticamente pues sirve para tener un mejor servicio
+        web. También usted puede cambiar la configuración de su ordenador para
+        declinar las cookies. Si se declinan es posible que no pueda utilizar
+        algunos de nuestros servicios.
       </p>
       <p>
         <strong>Enlaces a Terceros</strong>
@@ -112,13 +109,6 @@ export default function PrivacityPolicy() {
       <p>
         Mistery Chest Se reserva el derecho de cambiar los términos de la
         presente Política de Privacidad en cualquier momento.
-      </p>
-      <p>
-        Esta politica de privacidad se han generado en{' '}
-        <a href="https://politicadeprivacidadplantilla.com/" target="_blank">
-          politicadeprivacidadplantilla.com
-        </a>
-        .<br />
       </p>
     </div>
   )
