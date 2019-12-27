@@ -15,6 +15,7 @@ import Dashboard from '@material-ui/icons/Dashboard'
 
 import Anonymous from './Anonymous'
 import Logged from './Logged'
+import Profile from './Profile'
 import { RootState } from '../../store'
 
 const useStyles = makeStyles({
@@ -37,6 +38,7 @@ export default function TemporaryDrawer({
 }: TemporaryDrawerProps) {
   const classes = useStyles()
   const auth = useSelector(({ firebase }: RootState) => get(firebase, 'auth'))
+  const authIsEmpty = isEmpty(auth)
 
   const sideList = () => (
     <div
@@ -45,6 +47,7 @@ export default function TemporaryDrawer({
       onClick={toggleOpenDrawer}
       onKeyDown={toggleOpenDrawer}
     >
+      {!authIsEmpty && <Profile />}
       <List>
         <ListItem button component={Link} to="/">
           <ListItemIcon>
@@ -60,7 +63,7 @@ export default function TemporaryDrawer({
         </ListItem>
       </List>
       <Divider />
-      {isEmpty(auth) ? <Anonymous /> : <Logged />}
+      {authIsEmpty ? <Anonymous /> : <Logged />}
     </div>
   )
 

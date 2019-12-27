@@ -11,6 +11,7 @@ const League = React.lazy(() => import('screens/League'))
 const Login = React.lazy(() => import('screens/Login'))
 const Logout = React.lazy(() => import('screens/Logout'))
 const NotFound = React.lazy(() => import('screens/404'))
+const PrivacyPolicy = React.lazy(() => import('screens/PrivacyPolicy'))
 
 function App() {
   const [drawerOpen, setDrawerOpen] = React.useState(false)
@@ -38,6 +39,9 @@ function App() {
             </Route>
             <Route exact path="/leagues/:leagueId">
               <League />
+            </Route>
+            <Route exact path="'/privacy-policy">
+              <PrivacyPolicy />
             </Route>
             <Route exact path="/">
               <Home />
