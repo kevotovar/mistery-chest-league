@@ -3,7 +3,8 @@ import { Redirect } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 import get from 'lodash/get'
 import { useFirebase } from 'react-redux-firebase'
 import { isLoaded, isEmpty } from 'react-redux-firebase'
@@ -28,6 +29,12 @@ const createStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
     margin: theme.spacing(2, 0),
   },
+  facebookButton: {
+    margin: theme.spacing(0, 2, 0, 2),
+    [theme.breakpoints.down('sm')]: {
+      margin: theme.spacing(2, 0, 0),
+    },
+  },
 }))
 
 interface RegisterUser {
@@ -41,15 +48,12 @@ export default function Login() {
   const auth = useSelector(function({ firebase }: RootState) {
     return get(firebase, 'auth')
   })
-  const title = useSelector(function({ layoutState }: RootState) {
-    return layoutState.get('title')
-  })
   const dispatch = useDispatch()
-  React.useEffect(
+  React.useMemo(
     function() {
-      dispatch(setTitle('Registrarse'))
+      dispatch(setTitle('Iniciar sesión'))
     },
-    [title, dispatch]
+    [dispatch]
   )
   async function registerUser({ email, password }: RegisterUser) {
     try {
@@ -58,6 +62,14 @@ export default function Login() {
       console.error(e)
     }
   }
+  function loginWithFacebook(params: any) {
+    return firebase.login({
+      provider: 'facebook',
+      type: 'redirect',
+    })
+  }
+  const theme = useTheme()
+  const useFullWidthButtons = useMediaQuery(theme.breakpoints.down('sm'))
   if (isLoaded(auth) && isEmpty(auth)) {
     return (
       <Formik
@@ -95,8 +107,19 @@ export default function Login() {
                       type="submit"
                       disabled={!isValid && isSubmitting}
                       variant="contained"
+                      color="primary"
+                      fullWidth={useFullWidthButtons}
                     >
                       Enviar
+                    </Button>
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      onClick={loginWithFacebook}
+                      className={styles.facebookButton}
+                      fullWidth={useFullWidthButtons}
+                    >
+                      Registrarse con Facebook
                     </Button>
                   </Grid>
                 </Grid>
