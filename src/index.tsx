@@ -6,6 +6,7 @@ import { ReactReduxFirebaseProvider } from 'react-redux-firebase'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider } from '@material-ui/core/styles'
 import moment from 'moment'
+import * as Sentry from '@sentry/browser'
 
 import { store, firebase } from './store'
 import App from './App'
@@ -14,6 +15,12 @@ import theme from './theme'
 import * as serviceWorker from './serviceWorker'
 import 'moment/locale/es'
 import './styles.css'
+
+if (process.env.NODE_ENV === 'production') {
+  Sentry.init({
+    dsn: 'https://5a3c3343180e41c280fbdf5d6319f2aa@sentry.io/1867926',
+  })
+}
 
 moment.locale('es')
 
