@@ -7,13 +7,17 @@ import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import TableBody from '@material-ui/core/TableBody'
 import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
+import Delete from '@material-ui/icons/Delete'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { useTable } from 'react-table'
 import moment from 'moment'
+import { functions } from 'store'
 
 interface LeagueGamesHistoryProps {
   data: any
   users: any
+  admin: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,29 +29,58 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+const baseColumns = (users: any) => [
+  {
+    Header: 'Ganador',
+    accessor: (item: any) => users[item.winner]?.email,
+  },
+  {
+    Header: 'Perdedor',
+    accessor: (item: any) => users[item.loser]?.email,
+  },
+  {
+    Header: 'Fecha',
+    accessor: (item: any) => item.timestamp.seconds,
+    Cell: (props: any) => moment(props.value).format('LLL'),
+  },
+]
+
 export default function LeagueGamesHistory({
   data,
   users,
+  admin,
 }: LeagueGamesHistoryProps) {
   const classes = useStyles()
+
+  function deleteGame(gameId: string) {
+    return function() {
+      console.log({ gameId })
+      const deleteGame = functions.httpsCallable('deleteGame')
+      deleteGame({ gameId })
+    }
+  }
+
   const columns: any = React.useMemo(
-    () => [
-      {
-        Header: 'Ganador',
-        accessor: (item: any) => users[item.winner]?.email,
-      },
-      {
-        Header: 'Perdedor',
-        accessor: (item: any) => users[item.loser]?.email,
-      },
-      {
-        Header: 'Fecha',
-        accessor: (item: any) => item.timestamp.seconds,
-        Cell: (props: any) => moment(props.value).format('LLL'),
-      },
-    ],
-    [users]
+    () =>
+      admin
+        ? [
+            ...baseColumns(users),
+            {
+              Header: 'Eliminar',
+              accessor: (item: any) => item.id,
+              Cell: props => {
+                return (
+                  <IconButton onClick={deleteGame(props.cell.value)}>
+                    <Delete />
+                  </IconButton>
+                )
+              },
+            },
+          ]
+        : baseColumns(users),
+    [users, admin]
   )
+  console.log(columns)
   const {
     getTableProps,
     getTableBodyProps,

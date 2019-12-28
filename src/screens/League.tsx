@@ -149,7 +149,11 @@ export default function League() {
           <LeagueRegistredUsers data={storeParticipants} />
         </Grid>
         <Grid item xs={12}>
-          <LeagueGamesHistory data={leagueGames} users={users} />
+          <LeagueGamesHistory
+            data={leagueGames}
+            users={users}
+            admin={userRole.admin}
+          />
         </Grid>
       </Grid>
       {userRole.admin && (

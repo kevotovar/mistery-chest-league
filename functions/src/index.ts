@@ -46,3 +46,38 @@ exports.registerGame = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError('invalid-argument', error)
   }
 })
+
+exports.deleteGame = functions.https.onCall(async (data, context) => {
+  const VALIDATION_SCHEMA = yup.object().shape({
+    gameId: yup.string().required(),
+  })
+  try {
+    if (!context.auth?.uid) {
+      return new functions.https.HttpsError(
+        'unauthenticated',
+        'El usuario no esta autenticado'
+      )
+    }
+    await VALIDATION_SCHEMA.validate(data)
+    const userRoleReference = await db
+      .collection('roles')
+      .doc(context.auth?.uid || '')
+    const userRole = await userRoleReference.get()
+
+    const userRoleData = userRole.data()
+    if (userRoleData?.admin) {
+      const gamesReference = await db.collection('games').doc(data.gameId)
+      await gamesReference.delete()
+      return {
+        message: 'Juego eliminado',
+      }
+    } else {
+      return new functions.https.HttpsError(
+        'permission-denied',
+        'El ususario no es administrador'
+      )
+    }
+  } catch (error) {
+    throw new functions.https.HttpsError('invalid-argument', error)
+  }
+})
