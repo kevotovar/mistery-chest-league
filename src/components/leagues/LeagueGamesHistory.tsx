@@ -32,11 +32,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 const baseColumns = (users: any) => [
   {
     Header: 'Ganador',
-    accessor: (item: any) => users[item.winner]?.email,
+    accessor: (item: any) =>
+      users[item.winner]?.displayName || users[item.winner]?.email,
   },
   {
     Header: 'Perdedor',
-    accessor: (item: any) => users[item.loser]?.email,
+    accessor: (item: any) =>
+      users[item.winner]?.displayName || users[item.loser]?.email,
   },
   {
     Header: 'Fecha',
@@ -54,7 +56,6 @@ export default function LeagueGamesHistory({
 
   function deleteGame(gameId: string) {
     return function() {
-      console.log({ gameId })
       const deleteGame = functions.httpsCallable('deleteGame')
       deleteGame({ gameId })
     }
@@ -80,7 +81,6 @@ export default function LeagueGamesHistory({
         : baseColumns(users),
     [users, admin]
   )
-  console.log(columns)
   const {
     getTableProps,
     getTableBodyProps,

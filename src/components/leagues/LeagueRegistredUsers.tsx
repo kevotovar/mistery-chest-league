@@ -50,9 +50,9 @@ const columns = [
     sortable: false,
   },
   {
-    Header: 'Email',
+    Header: 'Jugador',
     disableSortBy: true,
-    accessor: (item = {}) => get(item, 'email'),
+    accessor: (item = {}) => get(item, 'displayName') || get(item, 'email'),
   },
   {
     Header: 'Juegos ganados',

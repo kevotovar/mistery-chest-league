@@ -26,6 +26,7 @@ const validationSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref('password')])
     .required(),
+  username: yup.string().required(),
 })
 
 const createStyles = makeStyles((theme: Theme) => ({
@@ -44,6 +45,7 @@ const createStyles = makeStyles((theme: Theme) => ({
 interface RegisterUser {
   email: string
   password: string
+  username: string
 }
 
 export default function Register() {
@@ -59,9 +61,12 @@ export default function Register() {
     },
     [dispatch]
   )
-  async function registerUser({ email, password }: RegisterUser) {
+  async function registerUser({ email, password, username }: RegisterUser) {
     try {
-      await firebase.createUser({ email, password })
+      await firebase.createUser(
+        { email, password },
+        { username, email, displayName: username }
+      )
     } catch (e) {
       console.error(e)
     }
@@ -70,6 +75,7 @@ export default function Register() {
     return firebase.login({
       provider: 'facebook',
       type: 'popup',
+      scopes: ['email', 'public_profile'],
     })
   }
   const theme = useTheme()
@@ -77,7 +83,12 @@ export default function Register() {
   if (isLoaded(auth) && isEmpty(auth)) {
     return (
       <Formik
-        initialValues={{ password: '', email: '', passwordConfirmation: '' }}
+        initialValues={{
+          password: '',
+          email: '',
+          passwordConfirmation: '',
+          username: '',
+        }}
         onSubmit={registerUser}
         validationSchema={validationSchema}
       >
@@ -87,6 +98,14 @@ export default function Register() {
               <Container className={styles.container}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
+                    <Field
+                      name="username"
+                      label="Nombre"
+                      component={TextField}
+                      margin="normal"
+                      fullWidth
+                      variant="outlined"
+                    />
                     <Field
                       name="email"
                       label="Email"

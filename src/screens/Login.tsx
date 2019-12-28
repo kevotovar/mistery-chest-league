@@ -66,7 +66,7 @@ export default function Login() {
     return firebase.login({
       provider: 'facebook',
       type: 'popup',
-      scopes: ['email'],
+      scopes: ['email', 'public_profile'],
     })
   }
   const theme = useTheme()
