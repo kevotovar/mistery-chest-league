@@ -57,8 +57,9 @@ export default function League() {
     collection: 'roles',
     doc: userUid,
   })
-  const userRole = useSelector(({ firestore }: RootState) =>
-    get(firestore, `data.roles.${userUid}`, {})
+  const userRole = useSelector(
+    ({ firestore }: RootState) =>
+      get(firestore, `data.roles.${userUid}`, {}) || {}
   )
   const leagueGames: any[] = useSelector(({ firestore }: RootState) =>
     get(firestore, 'ordered.games', [])
