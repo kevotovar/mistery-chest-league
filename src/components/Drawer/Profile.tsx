@@ -14,13 +14,20 @@ export default function Profile() {
   const auth: any = useSelector((state: RootState) =>
     get(state, 'firebase.auth')
   )
+  const profile: any = useSelector((state: RootState) =>
+    get(state, 'firebase.profile')
+  )
   return (
     <List>
       <ListItem>
         <ListItemAvatar>
-          <Avatar src={auth.photoURL} />
+          {auth.photoURL ? (
+            <Avatar src={auth.photoURL} />
+          ) : (
+            <Avatar>{profile.displayName[0]}</Avatar>
+          )}
         </ListItemAvatar>
-        <ListItemText>{auth.displayName}</ListItemText>
+        <ListItemText>{profile.displayName}</ListItemText>
       </ListItem>
       <Divider />
     </List>
